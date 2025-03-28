@@ -273,7 +273,7 @@ function updatePipes() {
         // Increment score only when the bird passes the pipe
         if (!pipe.passed && bird.x > pipe.x + pipe.width) {
             pipe.passed = true; // Mark the pipe as passed
-            score++; // Increment score
+            score += scoreMultiplier; // Increment score based on multiplier
             updateScore(); // Update score UI
         }
 
