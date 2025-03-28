@@ -86,6 +86,10 @@ function resetGame() {
     pipeSpeed = isMobile ? 2 : 1; // Reset pipe speed
     bird.gravity = isMobile ? 0.4 : 0.2; // Reset gravity
     scoreMultiplier = 1; // Reset score multiplier
+
+    // Reset visual effects
+    resetVisualEffect('invincibility');
+    resetVisualEffect('scoreMultiplier');
 }
 
 function drawBird() {
@@ -392,7 +396,7 @@ function applyVisualEffect(powerUpType) {
             break;
         case 'scoreMultiplier':
             scoreElement.style.color = '#ffff00';
-            scoreElement.style.fontSize = '28px';
+            scoreElement.style.fontSize = '34px';
             break;
     }
 }
@@ -532,6 +536,10 @@ function gameLoop() {
         clearInterval(powerUpTimerInterval);
         activePowerUpName = '';
         powerUpRemainingTime = 0;
+
+        // Reset visual effects
+        resetVisualEffect('invincibility');
+        resetVisualEffect('scoreMultiplier');
 
         drawRestartScreen();
         return;
