@@ -57,6 +57,7 @@ let powerUpDisplayTimeout; // Timeout for clearing the power-up name display
 let powerUpRemainingTime = 0; // Store the remaining time for the active power-up
 let powerUpTimerInterval; // Interval for updating the timer
 let shakeTimeout; // Timeout for stopping the shake effect
+let pipeCount = 0; // Counter to track the number of pipes generated
 
 function resetGame() {
     bird = { 
@@ -236,8 +237,22 @@ function updatePipes() {
         let top = Math.random() * (canvas.height / 2 - minHeight) + minHeight; // Ensure top pipe is not too small
         pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap });
 
-        // Randomly add a power-up in the pipe gap
-        if (!activePowerUpName && Math.random() < 0.1) { // 10% chance to spawn a power-up, only if no power-up is active
+        pipeCount++; // Increment the pipe counter
+
+        // Ensure the first power-up appears on the 5th pipe
+        if (pipeCount === 5 && !activePowerUpName) {
+            const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+            powerUps.push({
+                x: canvas.width + 25, // Center of the pipe
+                y: top + gap / 2, // Center of the gap
+                radius: 10, // Power-up size
+                color: randomPowerUp.color,
+                type: randomPowerUp.type,
+                effect: randomPowerUp.effect,
+                reset: randomPowerUp.reset,
+                duration: randomPowerUp.duration,
+            });
+        } else if (pipeCount > 5 && !activePowerUpName && Math.random() < 0.1) { // 10% chance for subsequent power-ups
             const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
             powerUps.push({
                 x: canvas.width + 25, // Center of the pipe
@@ -332,6 +347,12 @@ function drawPowerUpName() {
 
 function gameLoop() {
     if (gameOver) {
+        // Reset power-up effects, timer, and display when the game is over
+        clearTimeout(powerUpDisplayTimeout);
+        clearInterval(powerUpTimerInterval);
+        activePowerUpName = '';
+        powerUpRemainingTime = 0;
+
         drawRestartScreen();
         return;
     }
