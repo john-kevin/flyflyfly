@@ -202,16 +202,16 @@ button:hover {
 }
 
 #bouncingBird {
-    position: absolute; /* Position the bird relative to the welcome screen */
-    top: calc(50% - 120px); /* Adjust to place the bird above the title */
-    left: calc(50% - 20px); /* Move the bird 20px to the left */
+    position: absolute; /* Position the egg relative to the welcome screen */
+    top: calc(50% - 150px); /* Moved 10px further up */
+    left: calc(50% - 20px); /* Move the egg 20px to the left */
     transform: translateX(-50%);
     width: 50px;
     height: 50px;
-    background-color: #ffff00; /* Yellow neon bird color */
+    background-color: #ffff00; /* Yellow neon egg color */
     border-radius: 50%;
     box-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00; /* Yellow neon glow */
-    animation: bounce 2s infinite ease-in-out;
+    animation: bounce 1.22s infinite ease-in-out;
 }
 
 #dialogBox {
