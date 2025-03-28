@@ -4,9 +4,14 @@ const restartButton = document.getElementById('restartButton');
 const scoreElement = document.getElementById('score');
 const welcomeScreen = document.getElementById('welcomeScreen');
 const startButton = document.getElementById('startButton');
+const starsCanvas = document.getElementById('starsCanvas');
+const starsCtx = starsCanvas.getContext('2d');
 
 canvas.width = 400;
 canvas.height = 600;
+
+starsCanvas.width = window.innerWidth;
+starsCanvas.height = window.innerHeight;
 
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -23,6 +28,7 @@ let pipes = [];
 let frame = 0;
 let gameOver = false;
 let score = 0; // Initialize score
+let stars = [];
 
 let pipeSpeed = isMobile ? 2 : 1; // Faster on mobile, slower on desktop
 let frameIncrement = isMobile ? 1.5 : 1; // Faster frame increment on mobile
@@ -173,5 +179,53 @@ document.addEventListener('keydown', (e) => {
 canvas.addEventListener('touchstart', () => {
     bird.velocity = bird.lift; // Allow tap to make the bird jump
 });
+
+function createStars() {
+    for (let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * starsCanvas.width,
+            y: Math.random() * starsCanvas.height,
+            size: Math.random() * 2,
+            speedX: Math.random() * 2 - 1,
+            speedY: Math.random() * 2 - 1,
+        });
+    }
+}
+
+function drawStars() {
+    starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+    stars.forEach(star => {
+        starsCtx.beginPath();
+        starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        starsCtx.fillStyle = '#00ffcc'; // Neon star color
+        starsCtx.shadowBlur = 10;
+        starsCtx.shadowColor = '#00ffcc';
+        starsCtx.fill();
+    });
+}
+
+function updateStars() {
+    stars.forEach(star => {
+        star.x += star.speedX;
+        star.y += star.speedY;
+
+        if (star.x < 0 || star.x > starsCanvas.width || star.y < 0 || star.y > starsCanvas.height) {
+            star.x = Math.random() * starsCanvas.width;
+            star.y = Math.random() * starsCanvas.height;
+            star.size = Math.random() * 2;
+            star.speedX = Math.random() * 2 - 1;
+            star.speedY = Math.random() * 2 - 1;
+        }
+    });
+}
+
+function animateStars() {
+    drawStars();
+    updateStars();
+    requestAnimationFrame(animateStars);
+}
+
+createStars();
+animateStars();
 
 // Do not start the game loop immediately; wait for the start button
