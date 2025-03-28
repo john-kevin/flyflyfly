@@ -54,8 +54,8 @@ beforeEach(() => {
         <button id="startButton">Start</button>
     `;
     const canvas = document.getElementById('gameCanvas');
-    canvas.width = 480; // Updated width
-    canvas.height = 640; // Updated height
+    canvas.width = 320; // Reverted width
+    canvas.height = 480; // Reverted height
 });
 
 describe('Bird Movement', () => {
