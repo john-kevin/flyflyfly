@@ -9,8 +9,8 @@ const bird = {
     y: 150,
     width: 50,
     height: 50,
-    gravity: 0.8,  // Reduced from 1.2 for slower falling
-    lift: -12,    // Reduced from -15 for gentler jumps
+    gravity: 0.8,  // Keep gravity the same for smooth falling
+    lift: -8,      // Reduced from -12 to make the jump less bouncy
     velocity: 0,
     draw() {
         // Draw the bird's body
