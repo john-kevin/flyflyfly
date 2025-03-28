@@ -12,3 +12,33 @@ canvas {
     border: 2px solid #000;
     display: block;
 }
+
+#welcomeScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #70c5ce;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#welcomeScreen h1 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+#welcomeScreen button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #ffcc00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#welcomeScreen button:hover {
+    background-color: #ffaa00;
+}

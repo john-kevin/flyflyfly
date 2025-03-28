@@ -102,6 +102,15 @@ function restartGame() {
     gameLoop();
 }
 
+const welcomeScreen = document.getElementById('welcomeScreen');
+const startButton = document.getElementById('startButton');
+
+startButton.addEventListener('click', () => {
+    welcomeScreen.style.display = 'none'; // Explicitly set to "none"
+    canvas.style.display = 'block'; // Explicitly set to "block"
+    gameLoop();
+});
+
 let gameLoopId;
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -126,8 +135,6 @@ function gameLoop() {
 }
 
 canvas.addEventListener('click', () => bird.flap());
-
-gameLoop();
 
 module.exports = {
     bird,

@@ -1,7 +1,9 @@
 // Mock the DOM before requiring the script
 document.body.innerHTML = `
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="gameCanvas" style="display: none;"></canvas>
     <button id="restartButton" style="display: none;">Restart</button>
+    <div id="welcomeScreen" style="display: flex;">Welcome to the game!</div>
+    <button id="startButton">Start</button>
 `;
 
 // Mock the getContext method
@@ -30,13 +32,18 @@ HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
     strokeText: jest.fn(),
 }));
 
+// Require the script to initialize event listeners
+require('./script');
+
 const { bird, checkCollision, pipes } = require('./script');
 
 beforeEach(() => {
     // Mock the DOM
     document.body.innerHTML = `
-        <canvas id="gameCanvas"></canvas>
+        <canvas id="gameCanvas" style="display: none;"></canvas>
         <button id="restartButton" style="display: none;">Restart</button>
+        <div id="welcomeScreen" style="display: flex;">Welcome to the game!</div>
+        <button id="startButton">Start</button>
     `;
     const canvas = document.getElementById('gameCanvas');
     canvas.width = 320;
@@ -95,5 +102,17 @@ describe('Collision Detection', () => {
         pipes.length = 0; // Clear pipes
         pipes.push({ x: 300, topHeight: 80, bottomHeight: 300 });
         expect(checkCollision()).toBe(false);
+    });
+});
+
+describe('Welcome Screen', () => {
+    test('Welcome screen should be visible initially', () => {
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        expect(welcomeScreen.style.display).not.toBe('none');
+    });
+
+    test('Game canvas should be hidden initially', () => {
+        const canvas = document.getElementById('gameCanvas');
+        expect(canvas.style.display).toBe('none');
     });
 });
