@@ -43,7 +43,6 @@ let score = 0; // Initialize score
 let stars = [];
 let powerUps = []; // Array to store power-ups
 const powerUpTypes = [
-    { type: 'gravityReduction', color: '#0000ff', effect: () => { bird.gravity /= 2; }, reset: () => { bird.gravity *= 2; }, duration: 5000 },
     { type: 'invincibility', color: '#ff00ff', effect: () => { invincible = true; }, reset: () => { invincible = false; }, duration: 5000 },
     { type: 'scoreMultiplier', color: '#ffff00', effect: () => { scoreMultiplier = 2; }, reset: () => { scoreMultiplier = 1; }, duration: 5000 },
 ];
@@ -263,7 +262,7 @@ function updatePipes() {
 
         // Ensure the first power-up appears on the 5th pipe
         if (pipeCount === 5) {
-            spawnSpecificPowerUp(top, adjustedGap, 'gravityReduction'); // Replace 'speedBoost' with another power-up if needed
+            spawnSpecificPowerUp(top, adjustedGap, 'invincibility'); // Replace 'speedBoost' with another power-up if needed
         } 
         // Ensure a power-up appears if 10 pipes are traversed without one
         else if (pipesSinceLastPowerUp >= 10) {
@@ -272,6 +271,15 @@ function updatePipes() {
         // Randomly spawn power-ups after the 5th pipe
         else if (pipeCount > 5 && !activePowerUpName && Math.random() < 0.1) { // 10% chance for subsequent power-ups
             spawnPowerUp(top, adjustedGap);
+        }
+
+        // Ensure the first cannonball appears on the 5th pipe
+        if (pipeCount === 5) {
+            spawnCannonball();
+        } 
+        // Make subsequent cannonballs slightly rarer
+        else if (pipeCount > 5 && Math.random() < 0.08) { // 8% chance for cannonballs after the 5th pipe
+            spawnCannonball();
         }
     }
 
@@ -378,12 +386,6 @@ function checkPowerUpCollision() {
 
 function applyVisualEffect(powerUpType) {
     switch (powerUpType) {
-        case 'speedBoost':
-            // No visual effect, the speed boost is handled in the effect function
-            break;
-        case 'gravityReduction':
-            canvas.style.filter = 'blur(5px)';
-            break;
         case 'invincibility':
             bird.shadowColor = '#ff00ff';
             bird.shadowBlur = 20;
@@ -397,12 +399,6 @@ function applyVisualEffect(powerUpType) {
 
 function resetVisualEffect(powerUpType) {
     switch (powerUpType) {
-        case 'speedBoost':
-            // No visual effect to reset
-            break;
-        case 'gravityReduction':
-            canvas.style.filter = 'none';
-            break;
         case 'invincibility':
             bird.shadowColor = '#ffff00';
             bird.shadowBlur = 15;
@@ -548,7 +544,7 @@ function gameLoop() {
     drawGround(); // Draw ground
     drawPowerUpName(); // Draw the active power-up name
 
-    if (score >= 10) {
+    if (score >= 5) {
         if (frame % 120 === 0) spawnCannonball(); // Spawn a cannonball every 120 frames
         updateCannonballs();
         drawCannonballs();
