@@ -1,6 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restartButton = document.getElementById('restartButton');
+const scoreElement = document.getElementById('score');
 
 canvas.width = 400;
 canvas.height = 600;
@@ -10,6 +11,7 @@ let pipes = [];
 let frame = 0;
 let gameOver = false;
 let restart = false;
+let score = 0; // Initialize score
 
 function drawBird() {
     ctx.beginPath();
@@ -56,10 +58,17 @@ function updateBird() {
     }
 }
 
+function updateScore() {
+    scoreElement.textContent = `Score: ${score}`;
+}
+
 function drawRestartScreen() {
     ctx.font = '30px Arial';
-    ctx.fillStyle = 'red';
-    ctx.fillText('Game Over', canvas.width / 2 - 80, canvas.height / 2 - 20);
+    ctx.fillStyle = '#00ffcc'; // Neon text color
+    ctx.textAlign = 'center';
+    ctx.fillText('SYSTEM FAILURE', canvas.width / 2, canvas.height / 2 - 20);
+    ctx.font = '20px Arial';
+    ctx.fillText('Press Restart to Reboot', canvas.width / 2, canvas.height / 2 + 20);
     restartButton.style.display = 'block'; // Show the restart button
 }
 
@@ -68,6 +77,8 @@ restartButton.addEventListener('click', () => {
     bird = { x: 50, y: 300, radius: 15, velocity: 0, gravity: 0.2, lift: -6 }; // Reduced gravity
     pipes = [];
     frame = 0;
+    score = 0; // Reset score
+    updateScore(); // Update score UI
     gameOver = false;
     restartButton.style.display = 'none'; // Hide the restart button
     gameLoop();
@@ -79,6 +90,8 @@ function updatePipes() {
         let minHeight = 50; // Minimum height for the top pipe
         let top = Math.random() * (canvas.height / 2 - minHeight) + minHeight; // Ensure top pipe is not too small
         pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap });
+        score++; // Increment score when a new pipe is generated
+        updateScore(); // Update score UI
     }
 
     pipes.forEach(pipe => {
@@ -126,6 +139,10 @@ document.addEventListener('keydown', (e) => {
         gameOver = false;
         gameLoop();
     }
+});
+
+canvas.addEventListener('touchstart', () => {
+    bird.velocity = bird.lift; // Allow tap to make the bird jump
 });
 
 gameLoop();
