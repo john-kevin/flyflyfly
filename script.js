@@ -82,6 +82,24 @@ function checkCollision() {
     return false;
 }
 
+const restartButton = document.getElementById('restartButton');
+
+function endGame() {
+    cancelAnimationFrame(gameLoopId);
+    restartButton.style.display = 'block';
+    restartButton.addEventListener('click', restartGame);
+}
+
+function restartGame() {
+    bird.y = 150;
+    bird.velocity = 0;
+    pipes.length = 0;
+    frameCount = 0;
+    restartButton.style.display = 'none';
+    gameLoop();
+}
+
+let gameLoopId;
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -96,12 +114,12 @@ function gameLoop() {
     updatePipes();
 
     if (checkCollision()) {
-        alert('Game Over!');
-        document.location.reload();
+        endGame();
+        return;
     }
 
     frameCount++;
-    requestAnimationFrame(gameLoop);
+    gameLoopId = requestAnimationFrame(gameLoop);
 }
 
 canvas.addEventListener('click', () => bird.flap());
