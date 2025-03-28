@@ -232,9 +232,9 @@ function applyShakeEffect() {
 }
 
 function updatePipes() {
-    if (frame % (isMobile ? 150 : 200) === 0) { // Faster pipe generation on mobile
-        let gap = 150; // Increase the gap for better gameplay
-        let minHeight = 50; // Minimum height for the top pipe
+    if (frame % (isMobile ? 180 : 240) === 0) { // Increased horizontal gap by generating pipes less frequently
+        let gap = 180; // Increased vertical gap for easier gameplay
+        let minHeight = 70; // Increased minimum height for the top pipe
         let top = Math.random() * (canvas.height / 2 - minHeight) + minHeight; // Ensure top pipe is not too small
         pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap, passed: false }); // Add a 'passed' flag
 
