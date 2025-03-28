@@ -58,6 +58,7 @@ let powerUpRemainingTime = 0; // Store the remaining time for the active power-u
 let powerUpTimerInterval; // Interval for updating the timer
 let shakeTimeout; // Timeout for stopping the shake effect
 let pipeCount = 0; // Counter to track the number of pipes generated
+let pipesSinceLastPowerUp = 0; // Counter to track pipes traversed since the last power-up
 
 function resetGame() {
     bird = { 
@@ -238,32 +239,19 @@ function updatePipes() {
         pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap, passed: false }); // Add a 'passed' flag
 
         pipeCount++; // Increment the pipe counter
+        pipesSinceLastPowerUp++; // Increment the counter for pipes since the last power-up
 
         // Ensure the first power-up appears on the 5th pipe
         if (pipeCount === 5) {
-            const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-            powerUps.push({
-                x: canvas.width + 25, // Center of the pipe
-                y: top + gap / 2, // Center of the gap
-                radius: 10, // Power-up size
-                color: randomPowerUp.color,
-                type: randomPowerUp.type,
-                effect: randomPowerUp.effect,
-                reset: randomPowerUp.reset,
-                duration: randomPowerUp.duration,
-            });
-        } else if (pipeCount > 5 && !activePowerUpName && Math.random() < 0.1) { // 10% chance for subsequent power-ups
-            const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-            powerUps.push({
-                x: canvas.width + 25, // Center of the pipe
-                y: top + gap / 2, // Center of the gap
-                radius: 10, // Power-up size
-                color: randomPowerUp.color,
-                type: randomPowerUp.type,
-                effect: randomPowerUp.effect,
-                reset: randomPowerUp.reset,
-                duration: randomPowerUp.duration,
-            });
+            spawnPowerUp(top, gap);
+        } 
+        // Ensure a power-up appears if 10 pipes are traversed without one
+        else if (pipesSinceLastPowerUp >= 10) {
+            spawnPowerUp(top, gap);
+        } 
+        // Randomly spawn power-ups after the 5th pipe
+        else if (pipeCount > 5 && !activePowerUpName && Math.random() < 0.1) { // 10% chance for subsequent power-ups
+            spawnPowerUp(top, gap);
         }
     }
 
@@ -297,6 +285,21 @@ function updatePipes() {
 
     pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
     powerUps = powerUps.filter(powerUp => powerUp.x + powerUp.radius > 0); // Remove power-ups that go off-screen
+}
+
+function spawnPowerUp(top, gap) {
+    const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+    powerUps.push({
+        x: canvas.width + 25, // Center of the pipe
+        y: top + gap / 2, // Center of the gap
+        radius: 10, // Power-up size
+        color: randomPowerUp.color,
+        type: randomPowerUp.type,
+        effect: randomPowerUp.effect,
+        reset: randomPowerUp.reset,
+        duration: randomPowerUp.duration,
+    });
+    pipesSinceLastPowerUp = 0; // Reset the counter after spawning a power-up
 }
 
 function checkPowerUpCollision() {
