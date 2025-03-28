@@ -235,12 +235,12 @@ function updatePipes() {
         let gap = 150; // Increase the gap for better gameplay
         let minHeight = 50; // Minimum height for the top pipe
         let top = Math.random() * (canvas.height / 2 - minHeight) + minHeight; // Ensure top pipe is not too small
-        pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap });
+        pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap, passed: false }); // Add a 'passed' flag
 
         pipeCount++; // Increment the pipe counter
 
         // Ensure the first power-up appears on the 5th pipe
-        if (pipeCount === 5 && !activePowerUpName) {
+        if (pipeCount === 5) {
             const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
             powerUps.push({
                 x: canvas.width + 25, // Center of the pipe
@@ -265,13 +265,17 @@ function updatePipes() {
                 duration: randomPowerUp.duration,
             });
         }
-
-        score++; // Increment score when a new pipe is generated
-        updateScore(); // Update score UI
     }
 
     pipes.forEach(pipe => {
         pipe.x -= pipeSpeed; // Adjust pipe movement speed based on device
+
+        // Increment score only when the bird passes the pipe
+        if (!pipe.passed && bird.x > pipe.x + pipe.width) {
+            pipe.passed = true; // Mark the pipe as passed
+            score++; // Increment score
+            updateScore(); // Update score UI
+        }
 
         // Check for collisions with the bird
         if (
