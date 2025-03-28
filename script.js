@@ -343,9 +343,10 @@ function drawPowerUpName() {
         ctx.textAlign = 'center';
         ctx.fillText(`Power-Up: ${activePowerUpName}`, canvas.width / 2, 55); // Display at the top center
 
-        // Draw remaining time
-        ctx.font = '16px Arial';
-        ctx.fillText(`Time Left: ${powerUpRemainingTime}s`, canvas.width / 2, 75); // Display below the power-up name
+        // Draw diminishing line for timer
+        const timerWidth = (powerUpRemainingTime / (powerUpTypes.find(p => p.type === activePowerUpName)?.duration / 1000)) * 200; // Calculate line width
+        ctx.fillStyle = '#00ffcc'; // Neon line color
+        ctx.fillRect(canvas.width / 2 - 100, 70, timerWidth, 5); // Draw the line
     }
 }
 
