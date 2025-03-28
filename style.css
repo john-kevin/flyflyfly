@@ -141,3 +141,11 @@ canvas {
 .fancy-button:active {
     transform: translateY(1px);
 }
+
+.tagalog-text {
+    font-size: 1.2rem;
+    color: #fff;
+    margin: 10px 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    font-style: italic;
+}
