@@ -15,7 +15,24 @@
         <div id="bouncingBird">
             <div id="dialogBox">"Bakit hindi pwedeng magtanim ng puno sa gitna ng kalsada? Kasi baka magka-traffic!"</div>
         </div>
+        <label>
+            <input type="checkbox" id="collisionToggle" checked>
+            Enable Pipe Collision
+        </label>
         <button id="startButton">Start</button>
+        <button id="infoButton">Power-Up Info</button>
+    </div>
+    <div id="powerUpModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Power-Up Information</h2>
+            <ul>
+                <li><span class="power-up-color" style="background-color: #00ff00;"></span> <strong>Speed Boost:</strong> Increases forward speed temporarily.</li>
+                <li><span class="power-up-color" style="background-color: #0000ff;"></span> <strong>Gravity Reduction:</strong> Reduces gravity for easier control.</li>
+                <li><span class="power-up-color" style="background-color: #ff00ff;"></span> <strong>Invincibility:</strong> Makes the bird immune to collisions temporarily.</li>
+                <li><span class="power-up-color" style="background-color: #ffff00;"></span> <strong>Score Multiplier:</strong> Doubles the score gained temporarily.</li>
+            </ul>
+        </div>
     </div>
     <canvas id="gameCanvas" style="display: none;"></canvas>
     <div id="score" style="display: none;">aa~Score: 0</div>
