@@ -1,5 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const restartButton = document.getElementById('restartButton');
 
 canvas.width = 400;
 canvas.height = 600;
@@ -39,10 +40,18 @@ function drawRestartScreen() {
     ctx.font = '30px Arial';
     ctx.fillStyle = 'red';
     ctx.fillText('Game Over', canvas.width / 2 - 80, canvas.height / 2 - 20);
-    ctx.font = '20px Arial';
-    ctx.fillStyle = 'black';
-    ctx.fillText('Press R to Restart', canvas.width / 2 - 90, canvas.height / 2 + 20);
+    restartButton.style.display = 'block'; // Show the restart button
 }
+
+restartButton.addEventListener('click', () => {
+    // Restart the game
+    bird = { x: 50, y: 300, radius: 15, velocity: 0, gravity: 0.2, lift: -6 }; // Reduced gravity
+    pipes = [];
+    frame = 0;
+    gameOver = false;
+    restartButton.style.display = 'none'; // Hide the restart button
+    gameLoop();
+});
 
 function updatePipes() {
     if (frame % 200 === 0) { // Slower pipe generation
