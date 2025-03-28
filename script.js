@@ -14,17 +14,37 @@ let restart = false;
 function drawBird() {
     ctx.beginPath();
     ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'yellow';
+    ctx.fillStyle = '#00ffcc'; // Neon bird color
+    ctx.shadowColor = '#00ffcc'; // Neon glow
+    ctx.shadowBlur = 15;
     ctx.fill();
+    ctx.shadowBlur = 0; // Reset shadow
+    ctx.strokeStyle = '#00b3a1'; // Neon border
     ctx.stroke();
 }
 
 function drawPipes() {
     pipes.forEach(pipe => {
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = '#005f5f'; // Futuristic pipe color
+        ctx.shadowColor = '#00ffcc'; // Neon glow
+        ctx.shadowBlur = 10;
         ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
         ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+        ctx.shadowBlur = 0; // Reset shadow
+
+        ctx.strokeStyle = '#00b3a1'; // Neon border
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top);
+        ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
     });
+}
+
+function drawGround() {
+    ctx.fillStyle = '#003333'; // Futuristic ground color
+    ctx.shadowColor = '#00ffcc'; // Neon glow
+    ctx.shadowBlur = 10;
+    ctx.fillRect(0, canvas.height - 20, canvas.width, 20); // Ground height
+    ctx.shadowBlur = 0; // Reset shadow
 }
 
 function updateBird() {
@@ -86,6 +106,7 @@ function gameLoop() {
 
     drawBird();
     drawPipes();
+    drawGround(); // Draw ground
 
     updateBird();
     updatePipes();
