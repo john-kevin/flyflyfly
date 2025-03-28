@@ -59,6 +59,7 @@ let powerUpTimerInterval; // Interval for updating the timer
 let shakeTimeout; // Timeout for stopping the shake effect
 let pipeCount = 0; // Counter to track the number of pipes generated
 let pipesSinceLastPowerUp = 0; // Counter to track pipes traversed since the last power-up
+let availablePowerUps = [...powerUpTypes]; // Copy of powerUpTypes to track available power-ups
 
 function resetGame() {
     bird = { 
@@ -101,37 +102,44 @@ function drawBird() {
 function drawPipes() {
     pipes.forEach(pipe => {
         // Top pipe
-        const topGradient = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.width, 0);
-        topGradient.addColorStop(0, '#1a1a1a'); // Dark base
-        topGradient.addColorStop(0.5, '#00ffcc'); // Neon glow
-        topGradient.addColorStop(1, '#1a1a1a'); // Dark base
+        let topGradient = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.width, 0);
+        let bottomGradient = ctx.createLinearGradient(pipe.x, canvas.height, pipe.x + pipe.width, canvas.height);
+        let neonColor = '#00ffcc';
+        let darkBase = '#1a1a1a';
+
+        if (invincible) {
+            neonColor = '#ff00ff'; // Change neon color for invincibility
+        }
+
+        topGradient.addColorStop(0, darkBase);
+        topGradient.addColorStop(0.5, neonColor);
+        topGradient.addColorStop(1, darkBase);
         ctx.fillStyle = topGradient;
         ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
 
         // Add glowing stripes to the top pipe
         for (let i = 0; i < pipe.top; i += 20) {
-            ctx.fillStyle = i % 40 === 0 ? '#00ffcc' : '#1a1a1a'; // Alternating neon and dark stripes
+            ctx.fillStyle = i % 40 === 0 ? neonColor : darkBase; // Alternating neon and dark stripes
             ctx.fillRect(pipe.x, i, pipe.width, 10);
         }
 
         // Bottom pipe
-        const bottomGradient = ctx.createLinearGradient(pipe.x, canvas.height, pipe.x + pipe.width, canvas.height);
-        bottomGradient.addColorStop(0, '#1a1a1a'); // Dark base
-        bottomGradient.addColorStop(0.5, '#00ffcc'); // Neon glow
-        bottomGradient.addColorStop(1, '#1a1a1a'); // Dark base
+        bottomGradient.addColorStop(0, darkBase);
+        bottomGradient.addColorStop(0.5, neonColor);
+        bottomGradient.addColorStop(1, darkBase);
         ctx.fillStyle = bottomGradient;
         ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
 
         // Add glowing stripes to the bottom pipe
         for (let i = canvas.height - pipe.bottom; i < canvas.height; i += 20) {
-            ctx.fillStyle = i % 40 === 0 ? '#00ffcc' : '#1a1a1a'; // Alternating neon and dark stripes
+            ctx.fillStyle = i % 40 === 0 ? neonColor : darkBase; // Alternating neon and dark stripes
             ctx.fillRect(pipe.x, i, pipe.width, 10);
         }
 
         // Pipe borders with glowing effect
-        ctx.shadowColor = '#00ffcc'; // Neon glow
+        ctx.shadowColor = neonColor; // Neon glow
         ctx.shadowBlur = 15;
-        ctx.strokeStyle = '#00ffcc'; // Neon edge color
+        ctx.strokeStyle = neonColor; // Neon edge color
         ctx.lineWidth = 3;
         ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top);
         ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
@@ -298,7 +306,13 @@ function updatePipes() {
 }
 
 function spawnPowerUp(top, gap) {
-    const randomPowerUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+    if (availablePowerUps.length === 0) {
+        availablePowerUps = [...powerUpTypes]; // Reset available power-ups if all have been spawned
+    }
+
+    const randomIndex = Math.floor(Math.random() * availablePowerUps.length);
+    const randomPowerUp = availablePowerUps.splice(randomIndex, 1)[0]; // Get and remove a power-up from the available list
+
     powerUps.push({
         x: canvas.width + 25, // Center of the pipe
         y: top + gap / 2, // Center of the gap
