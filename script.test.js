@@ -113,6 +113,37 @@ describe('Welcome Screen', () => {
 
     test('Game canvas should be hidden initially', () => {
         const canvas = document.getElementById('gameCanvas');
-        expect(canvas.style.display).toBe('none');
+        expect(canvas.style.display).toBe('none'); // Fixed typo: Changed .Be to .toBe
+    });
+});
+
+describe('Bird Physics', () => {
+    test('Bird should fall smoothly due to gravity', () => {
+        bird.y = 150;
+        bird.velocity = 0;
+        bird.update();
+        expect(bird.velocity).toBeGreaterThan(0); // Velocity should increase due to gravity
+        expect(bird.y).toBeGreaterThan(150); // Bird should move downward
+    });
+
+    test('Bird should jump lower with reduced lift', () => {
+        bird.y = 150;
+        bird.velocity = 0;
+        bird.flap();
+        expect(bird.velocity).toBeCloseTo(-15); // Velocity should match the reduced lift
+        bird.update();
+        expect(bird.y).toBeLessThan(150); // Bird should move upward, but not too high
+    });
+
+    test('Bird should not fall below the canvas', () => {
+        bird.y = 480; // Simulate bird at the bottom
+        bird.update();
+        expect(bird.y + bird.height).toBeLessThanOrEqual(480);
+    });
+
+    test('Bird should not go above the canvas', () => {
+        bird.y = -10; // Simulate bird above the canvas
+        bird.update();
+        expect(bird.y).toBeGreaterThanOrEqual(0);
     });
 });

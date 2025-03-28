@@ -7,14 +7,48 @@ canvas.height = 480;
 const bird = {
     x: 50,
     y: 150,
-    width: 20,
-    height: 20,
-    gravity: 1.5,
-    lift: -20,
+    width: 50,
+    height: 50,
+    gravity: 1.2, // Reduced gravity for smoother descent
+    lift: -15, // Reduced lift for a lower jump
     velocity: 0,
     draw() {
+        // Draw the bird's body
         ctx.fillStyle = 'yellow';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2, this.y + this.height / 2, this.width / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        // Draw the bird's wing
+        ctx.fillStyle = 'gold';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 4, this.y + this.height / 2, this.width / 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        // Draw the bird's beak
+        ctx.fillStyle = 'orange';
+        ctx.beginPath();
+        ctx.moveTo(this.x + this.width / 2 + 15, this.y + this.height / 2 - 5);
+        ctx.lineTo(this.x + this.width / 2 + 25, this.y + this.height / 2);
+        ctx.lineTo(this.x + this.width / 2 + 15, this.y + this.height / 2 + 5);
+        ctx.closePath();
+        ctx.fill();
+
+        // Draw the bird's eye
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2 + 10, this.y + this.height / 2 - 10, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        // Draw the bird's pupil
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(this.x + this.width / 2 + 12, this.y + this.height / 2 - 10, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
     },
     update() {
         this.velocity += this.gravity;

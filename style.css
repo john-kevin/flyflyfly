@@ -22,23 +22,80 @@ canvas {
     background-color: #70c5ce;
     font-family: Arial, sans-serif;
     text-align: center;
+    background-image: url('background.png'); /* Add a background image */
+    background-size: cover;
+    background-position: center;
 }
 
 #welcomeScreen h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: #fff;
-    margin-bottom: 20px;
+    margin: 20px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 #welcomeScreen button {
-    padding: 10px 20px;
-    font-size: 1rem;
+    padding: 15px 30px;
+    font-size: 1.2rem;
     background-color: #ffcc00;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
 }
 
 #welcomeScreen button:hover {
     background-color: #ffaa00;
+    transform: scale(1.1);
+}
+
+#birdImage {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+    animation: float 2s infinite ease-in-out;
+}
+
+#bird {
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+    border-radius: 50%; /* Make the bird circular */
+    position: relative;
+    animation: float 2s infinite ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#bird::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: -10px;
+    width: 20px;
+    height: 10px;
+    background-color: orange;
+    border-radius: 50%; /* Create a beak */
+    transform: rotate(45deg);
+}
+
+#bird::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: -5px;
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-radius: 50%; /* Create an eye */
+    box-shadow: 5px 0 0 black; /* Add a pupil */
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
