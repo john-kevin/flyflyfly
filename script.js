@@ -232,26 +232,36 @@ function applyShakeEffect() {
 }
 
 function updatePipes() {
-    if (frame % (isMobile ? 180 : 240) === 0) { // Increased horizontal gap by generating pipes less frequently
-        let gap = 180; // Increased vertical gap for easier gameplay
-        let minHeight = 70; // Increased minimum height for the top pipe
+    // Adjust difficulty based on score
+    const baseGap = 180; // Initial vertical gap
+    const minGap = 120; // Minimum vertical gap
+    const gapReductionRate = 2; // Reduce gap by 2 pixels every 10 points
+    const adjustedGap = Math.max(baseGap - Math.floor(score / 10) * gapReductionRate, minGap);
+
+    const basePipeSpeed = isMobile ? 2 : 1; // Initial pipe speed
+    const maxPipeSpeed = isMobile ? 4 : 3; // Maximum pipe speed
+    const speedIncreaseRate = 0.1; // Increase speed by 0.1 every 10 points
+    pipeSpeed = Math.min(basePipeSpeed + Math.floor(score / 10) * speedIncreaseRate, maxPipeSpeed);
+
+    if (frame % (isMobile ? 180 : 240) === 0) { // Horizontal gap remains constant
+        let minHeight = 70; // Minimum height for the top pipe
         let top = Math.random() * (canvas.height / 2 - minHeight) + minHeight; // Ensure top pipe is not too small
-        pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - gap, passed: false }); // Add a 'passed' flag
+        pipes.push({ x: canvas.width, width: 50, top: top, bottom: canvas.height - top - adjustedGap, passed: false }); // Add a 'passed' flag
 
         pipeCount++; // Increment the pipe counter
         pipesSinceLastPowerUp++; // Increment the counter for pipes since the last power-up
 
         // Ensure the first power-up appears on the 5th pipe
         if (pipeCount === 5) {
-            spawnPowerUp(top, gap);
+            spawnPowerUp(top, adjustedGap);
         } 
         // Ensure a power-up appears if 10 pipes are traversed without one
         else if (pipesSinceLastPowerUp >= 10) {
-            spawnPowerUp(top, gap);
+            spawnPowerUp(top, adjustedGap);
         } 
         // Randomly spawn power-ups after the 5th pipe
         else if (pipeCount > 5 && !activePowerUpName && Math.random() < 0.1) { // 10% chance for subsequent power-ups
-            spawnPowerUp(top, gap);
+            spawnPowerUp(top, adjustedGap);
         }
     }
 
