@@ -1,8 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 320;
-canvas.height = 480;
+canvas.width = 480; // Increased width from 320 to 480
+canvas.height = 640; // Increased height from 480 to 640
 
 const bird = {
     x: 50,
@@ -71,7 +71,7 @@ const bird = {
 
 const pipes = [];
 const pipeWidth = 40;
-const pipeGap = 120;
+const pipeGap = 150; // Increased gap from 120 to 150 for easier gameplay
 let frameCount = 0;
 let score = 0;
 
@@ -101,7 +101,7 @@ function updatePipes() {
             pipe.passed = true;
             score++;
         }
-        pipe.x -= 1.5;  // Reduced from 2 for slower pipe movement
+        pipe.x -= 1.2; // Reduced speed from 1.5 to 1.2 for slower pipe movement
     });
 
     if (pipes.length && pipes[0].x + pipeWidth < 0) {

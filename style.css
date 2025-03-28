@@ -11,6 +11,8 @@ body {
 canvas {
     border: 2px solid #000;
     display: block;
+    margin: 0 auto; /* Center the canvas horizontally */
+    background-color: #70c5ce; /* Add a background color for better visibility */
 }
 
 #welcomeScreen {
