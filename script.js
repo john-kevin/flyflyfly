@@ -310,18 +310,16 @@ function checkPowerUpCollision() {
             clearTimeout(powerUpDisplayTimeout); // Clear any existing timeout
             clearInterval(powerUpTimerInterval); // Clear any existing timer interval
 
-            // Start a timer to update the remaining time
+            // Start a continuous timer to update the remaining time
+            const startTime = Date.now();
             powerUpTimerInterval = setInterval(() => {
-                powerUpRemainingTime--;
+                const elapsed = (Date.now() - startTime) / 1000; // Calculate elapsed time in seconds
+                powerUpRemainingTime = Math.max((powerUp.duration / 1000) - elapsed, 0); // Update remaining time
                 if (powerUpRemainingTime <= 0) {
                     clearInterval(powerUpTimerInterval); // Stop the timer when time runs out
+                    activePowerUpName = ''; // Clear the power-up name
                 }
-            }, 1000);
-
-            powerUpDisplayTimeout = setTimeout(() => {
-                activePowerUpName = ''; // Clear the power-up name after the duration
-                powerUpRemainingTime = 0; // Clear the remaining time
-            }, powerUp.duration);
+            }, 16); // Update approximately every frame (60 FPS)
 
             powerUp.effect(); // Activate the power-up effect
             setTimeout(() => {
@@ -344,9 +342,11 @@ function drawPowerUpName() {
         ctx.fillText(`Power-Up: ${activePowerUpName}`, canvas.width / 2, 55); // Display at the top center
 
         // Draw diminishing line for timer
-        const timerWidth = (powerUpRemainingTime / (powerUpTypes.find(p => p.type === activePowerUpName)?.duration / 1000)) * 200; // Calculate line width
+        const totalDuration = powerUpTypes.find(p => p.type === activePowerUpName)?.duration / 1000; // Total duration in seconds
+        const elapsedTime = totalDuration - powerUpRemainingTime; // Elapsed time
+        const timerWidth = ((totalDuration - elapsedTime) / totalDuration) * 200; // Calculate line width
         ctx.fillStyle = '#00ffcc'; // Neon line color
-        ctx.fillRect(canvas.width / 2 - 100, 70, timerWidth, 5); // Draw the line
+        ctx.fillRect(canvas.width / 2 - 100, 70, Math.max(timerWidth, 0), 5); // Draw the line
     }
 }
 
