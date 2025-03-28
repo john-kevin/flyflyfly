@@ -71,17 +71,42 @@ function drawBird() {
 
 function drawPipes() {
     pipes.forEach(pipe => {
-        ctx.fillStyle = '#005f5f'; // Futuristic pipe color
-        ctx.shadowColor = '#00ffcc'; // Neon glow
-        ctx.shadowBlur = 10;
+        // Top pipe
+        const topGradient = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.width, 0);
+        topGradient.addColorStop(0, '#1a1a1a'); // Dark base
+        topGradient.addColorStop(0.5, '#00ffcc'); // Neon glow
+        topGradient.addColorStop(1, '#1a1a1a'); // Dark base
+        ctx.fillStyle = topGradient;
         ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
-        ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
-        ctx.shadowBlur = 0; // Reset shadow
 
-        ctx.strokeStyle = '#00b3a1'; // Neon border
-        ctx.lineWidth = 2;
+        // Add glowing stripes to the top pipe
+        for (let i = 0; i < pipe.top; i += 20) {
+            ctx.fillStyle = i % 40 === 0 ? '#00ffcc' : '#1a1a1a'; // Alternating neon and dark stripes
+            ctx.fillRect(pipe.x, i, pipe.width, 10);
+        }
+
+        // Bottom pipe
+        const bottomGradient = ctx.createLinearGradient(pipe.x, canvas.height, pipe.x + pipe.width, canvas.height);
+        bottomGradient.addColorStop(0, '#1a1a1a'); // Dark base
+        bottomGradient.addColorStop(0.5, '#00ffcc'); // Neon glow
+        bottomGradient.addColorStop(1, '#1a1a1a'); // Dark base
+        ctx.fillStyle = bottomGradient;
+        ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+
+        // Add glowing stripes to the bottom pipe
+        for (let i = canvas.height - pipe.bottom; i < canvas.height; i += 20) {
+            ctx.fillStyle = i % 40 === 0 ? '#00ffcc' : '#1a1a1a'; // Alternating neon and dark stripes
+            ctx.fillRect(pipe.x, i, pipe.width, 10);
+        }
+
+        // Pipe borders with glowing effect
+        ctx.shadowColor = '#00ffcc'; // Neon glow
+        ctx.shadowBlur = 15;
+        ctx.strokeStyle = '#00ffcc'; // Neon edge color
+        ctx.lineWidth = 3;
         ctx.strokeRect(pipe.x, 0, pipe.width, pipe.top);
         ctx.strokeRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+        ctx.shadowBlur = 0; // Reset shadow
     });
 }
 
