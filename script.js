@@ -2,6 +2,8 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restartButton = document.getElementById('restartButton');
 const scoreElement = document.getElementById('score');
+const welcomeScreen = document.getElementById('welcomeScreen');
+const startButton = document.getElementById('startButton');
 
 canvas.width = 400;
 canvas.height = 600;
@@ -20,11 +22,26 @@ let bird = {
 let pipes = [];
 let frame = 0;
 let gameOver = false;
-let restart = false;
 let score = 0; // Initialize score
 
 let pipeSpeed = isMobile ? 2 : 1; // Faster on mobile, slower on desktop
 let frameIncrement = isMobile ? 1.5 : 1; // Faster frame increment on mobile
+
+function resetGame() {
+    bird = { 
+        x: 50, 
+        y: 300, 
+        radius: 15, 
+        velocity: 0, 
+        gravity: isMobile ? 0.4 : 0.2, 
+        lift: -6 
+    }; 
+    pipes = [];
+    frame = 0;
+    score = 0;
+    updateScore();
+    gameOver = false;
+}
 
 function drawBird() {
     ctx.beginPath();
@@ -86,22 +103,17 @@ function drawRestartScreen() {
 }
 
 restartButton.addEventListener('click', () => {
-    // Restart the game
-    bird = { 
-        x: 50, 
-        y: 300, 
-        radius: 15, 
-        velocity: 0, 
-        gravity: isMobile ? 0.4 : 0.2, // Double gravity on mobile
-        lift: -6 
-    }; 
-    pipes = [];
-    frame = 0;
-    score = 0; // Reset score
-    updateScore(); // Update score UI
-    gameOver = false;
+    resetGame();
     restartButton.style.display = 'none'; // Hide the restart button
     gameLoop();
+});
+
+startButton.addEventListener('click', () => {
+    welcomeScreen.style.display = 'none'; // Hide the welcome screen
+    canvas.style.display = 'block'; // Show the game canvas
+    scoreElement.style.display = 'block'; // Show the score
+    resetGame(); // Reset game state
+    gameLoop(); // Start the game loop
 });
 
 function updatePipes() {
@@ -152,18 +164,8 @@ document.addEventListener('keydown', (e) => {
     if (e.key === ' ') {
         bird.velocity = bird.lift;
     } else if (e.key.toLowerCase() === 'r' && gameOver) {
-        // Restart the game
-        bird = { 
-            x: 50, 
-            y: 300, 
-            radius: 15, 
-            velocity: 0, 
-            gravity: isMobile ? 0.4 : 0.2, // Double gravity on mobile
-            lift: -6 
-        }; 
-        pipes = [];
-        frame = 0;
-        gameOver = false;
+        resetGame();
+        restartButton.style.display = 'none'; // Hide the restart button
         gameLoop();
     }
 });
@@ -172,4 +174,4 @@ canvas.addEventListener('touchstart', () => {
     bird.velocity = bird.lift; // Allow tap to make the bird jump
 });
 
-gameLoop();
+// Do not start the game loop immediately; wait for the start button
