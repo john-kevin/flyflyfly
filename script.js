@@ -6,6 +6,14 @@ const welcomeScreen = document.getElementById('welcomeScreen');
 const startButton = document.getElementById('startButton');
 const starsCanvas = document.getElementById('starsCanvas');
 const starsCtx = starsCanvas.getContext('2d');
+const dialogBox = document.getElementById('dialogBox');
+const jokes = [
+    "Bakit hindi pwedeng magtanim ng puno sa gitna ng kalsada? Kasi baka magka-traffic!",
+    "Anong tawag sa isdang mahilig mag-party? TUNA-turn up!",
+    "Bakit hindi nag-aaway ang mga keyboard? Kasi may SPACE sila!",
+    "Anong sabi ng kalendaryo sa relo? 'I’m DATE-ing someone else!'"
+];
+let jokeIndex = 0;
 
 canvas.width = 400;
 canvas.height = 600;
@@ -52,12 +60,12 @@ function resetGame() {
 function drawBird() {
     ctx.beginPath();
     ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#00ffcc'; // Neon bird color
-    ctx.shadowColor = '#00ffcc'; // Neon glow
+    ctx.fillStyle = '#ffff00'; // Yellow neon bird color
+    ctx.shadowColor = '#ffff00'; // Yellow neon glow
     ctx.shadowBlur = 15;
     ctx.fill();
     ctx.shadowBlur = 0; // Reset shadow
-    ctx.strokeStyle = '#00b3a1'; // Neon border
+    ctx.strokeStyle = '#b3b300'; // Yellow border
     ctx.stroke();
 }
 
@@ -227,5 +235,13 @@ function animateStars() {
 
 createStars();
 animateStars();
+
+function cycleJokes() {
+    dialogBox.textContent = jokes[jokeIndex];
+    jokeIndex = (jokeIndex + 1) % jokes.length;
+    setTimeout(cycleJokes, 8000); // Change joke every 6 seconds (increased from 4 seconds)
+}
+
+cycleJokes();
 
 // Do not start the game loop immediately; wait for the start button

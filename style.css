@@ -68,7 +68,7 @@ button:hover {
 }
 
 #welcomeScreen {
-    position: absolute;
+    position: relative; /* Ensure child elements can be positioned relative to this container */
     top: 0;
     left: 0;
     width: 100%;
@@ -85,8 +85,26 @@ button:hover {
 }
 
 #welcomeScreen h1 {
+    margin-top: 20px; /* Add gap between the bird and the title */
     font-size: 36px;
     margin-bottom: 20px;
+}
+
+#welcomeScreen .subtitle {
+    font-size: 18px;
+    color: #00ffcc; /* Neon text color */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+    font-family: 'Arial', sans-serif;
+}
+
+#welcomeScreen .decorative-line {
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(to right, #00ffcc, #ff0000);
+    margin: 20px auto;
+    box-shadow: 0 0 10px #00ffcc, 0 0 20px #ff0000;
 }
 
 #startButton {
@@ -104,4 +122,51 @@ button:hover {
 #startButton:hover {
     background-color: #00ffcc; /* Neon hover effect */
     color: #1a1a1a; /* Invert text color */
+}
+
+#bouncingBird {
+    position: absolute; /* Position the bird relative to the welcome screen */
+    top: calc(50% - 120px); /* Adjust to place the bird above the title */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: #ffff00; /* Yellow neon bird color */
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00; /* Yellow neon glow */
+    animation: bounce 2s infinite ease-in-out;
+}
+
+#dialogBox {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    box-shadow: 0 0 10px #00ffcc;
+    text-align: center;
+    width: 200px;
+    animation: fadeInOut 4s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-30px);
+    }
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
 }
