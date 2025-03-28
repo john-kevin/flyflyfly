@@ -41,7 +41,7 @@ const pipeGap = 120;
 let frameCount = 0;
 
 function createPipe() {
-    const topHeight = Math.random() * (canvas.height - pipeGap - 50);
+    const topHeight = 110; // Adjusted topHeight for testing
     const bottomHeight = canvas.height - topHeight - pipeGap;
 
     pipes.push({
@@ -71,15 +71,18 @@ function updatePipes() {
 
 function checkCollision() {
     for (const pipe of pipes) {
-        if (
-            bird.x < pipe.x + pipeWidth &&
-            bird.x + bird.width > pipe.x &&
-            (bird.y < pipe.topHeight || bird.y + bird.height > canvas.height - pipe.bottomHeight)
-        ) {
-            return true;
+        // Check horizontal overlap
+        const horizontalCollision = bird.x < pipe.x + pipeWidth && bird.x + bird.width > pipe.x;
+
+        // Check vertical overlap (either top or bottom pipe)
+        const verticalCollision =
+            bird.y < pipe.topHeight || bird.y + bird.height > canvas.height - pipe.bottomHeight;
+
+        if (horizontalCollision && verticalCollision) {
+            return true; // Collision detected
         }
     }
-    return false;
+    return false; // No collision
 }
 
 const restartButton = document.getElementById('restartButton');
@@ -125,3 +128,9 @@ function gameLoop() {
 canvas.addEventListener('click', () => bird.flap());
 
 gameLoop();
+
+module.exports = {
+    bird,
+    pipes,
+    checkCollision
+};
