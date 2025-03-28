@@ -85,7 +85,7 @@ restartButton.addEventListener('click', () => {
 });
 
 function updatePipes() {
-    if (frame % 200 === 0) { // Slower pipe generation
+    if (frame % 150 === 0) { // Slightly faster pipe generation
         let gap = 150; // Increase the gap for better gameplay
         let minHeight = 50; // Minimum height for the top pipe
         let top = Math.random() * (canvas.height / 2 - minHeight) + minHeight; // Ensure top pipe is not too small
@@ -95,7 +95,7 @@ function updatePipes() {
     }
 
     pipes.forEach(pipe => {
-        pipe.x -= 1; // Slower pipe movement
+        pipe.x -= 2; // Increase pipe movement speed for smoother gameplay
 
         if (
             bird.x + bird.radius > pipe.x &&
@@ -124,7 +124,7 @@ function gameLoop() {
     updateBird();
     updatePipes();
 
-    frame++; // Ensure frame increments on every loop iteration
+    frame += 1.5; // Increase frame increment for smoother gameplay
     requestAnimationFrame(gameLoop);
 }
 
