@@ -9,8 +9,8 @@ const bird = {
     y: 150,
     width: 50,
     height: 50,
-    gravity: 1.2, // Reduced gravity for smoother descent
-    lift: -15, // Reduced lift for a lower jump
+    gravity: 0.8,  // Reduced from 1.2 for slower falling
+    lift: -12,    // Reduced from -15 for gentler jumps
     velocity: 0,
     draw() {
         // Draw the bird's body
@@ -95,7 +95,7 @@ function drawPipes() {
 
 function updatePipes() {
     pipes.forEach(pipe => {
-        pipe.x -= 2;
+        pipe.x -= 1.5;  // Reduced from 2 for slower pipe movement
     });
 
     if (pipes.length && pipes[0].x + pipeWidth < 0) {
@@ -120,11 +120,11 @@ function checkCollision() {
 }
 
 const restartButton = document.getElementById('restartButton');
+const gameOverScreen = document.getElementById('gameOverScreen');
 
 function endGame() {
     cancelAnimationFrame(gameLoopId);
-    restartButton.style.display = 'block';
-    restartButton.addEventListener('click', restartGame);
+    gameOverScreen.style.display = 'block';
 }
 
 function restartGame() {
@@ -132,9 +132,13 @@ function restartGame() {
     bird.velocity = 0;
     pipes.length = 0;
     frameCount = 0;
-    restartButton.style.display = 'none';
+    gameOverScreen.style.display = 'none';
+    canvas.style.display = 'block';
     gameLoop();
 }
+
+// Add event listener for restart button
+restartButton.addEventListener('click', restartGame);
 
 const welcomeScreen = document.getElementById('welcomeScreen');
 const startButton = document.getElementById('startButton');
@@ -173,5 +177,7 @@ canvas.addEventListener('click', () => bird.flap());
 module.exports = {
     bird,
     pipes,
-    checkCollision
+    checkCollision,
+    restartGame,
+    frameCount
 };

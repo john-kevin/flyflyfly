@@ -35,7 +35,7 @@ HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
 // Require the script to initialize event listeners
 require('./script');
 
-const { bird, checkCollision, pipes } = require('./script');
+const { bird, checkCollision, pipes, restartGame, frameCount } = require('./script');
 
 beforeEach(() => {
     // Mock the DOM
@@ -122,17 +122,17 @@ describe('Bird Physics', () => {
         bird.y = 150;
         bird.velocity = 0;
         bird.update();
-        expect(bird.velocity).toBeGreaterThan(0); // Velocity should increase due to gravity
-        expect(bird.y).toBeGreaterThan(150); // Bird should move downward
+        expect(bird.velocity).toBeCloseTo(0.8); // Match new gravity value
+        expect(bird.y).toBeGreaterThan(150);
     });
 
     test('Bird should jump lower with reduced lift', () => {
         bird.y = 150;
         bird.velocity = 0;
         bird.flap();
-        expect(bird.velocity).toBeCloseTo(-15); // Velocity should match the reduced lift
+        expect(bird.velocity).toBeCloseTo(-12); // Match new lift value
         bird.update();
-        expect(bird.y).toBeLessThan(150); // Bird should move upward, but not too high
+        expect(bird.y).toBeLessThan(150);
     });
 
     test('Bird should not fall below the canvas', () => {
@@ -147,3 +147,4 @@ describe('Bird Physics', () => {
         expect(bird.y).toBeGreaterThanOrEqual(0);
     });
 });
+
