@@ -6,15 +6,22 @@ const scoreElement = document.getElementById('score');
 canvas.width = 400;
 canvas.height = 600;
 
-let bird = { x: 50, y: 300, radius: 15, velocity: 0, gravity: 0.2, lift: -6 }; // Reduced gravity
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+let bird = { 
+    x: 50, 
+    y: 300, 
+    radius: 15, 
+    velocity: 0, 
+    gravity: isMobile ? 0.4 : 0.2, // Double gravity on mobile
+    lift: -6 
+}; 
+
 let pipes = [];
 let frame = 0;
 let gameOver = false;
 let restart = false;
 let score = 0; // Initialize score
-
-// Detect if the user is on a mobile device
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 let pipeSpeed = isMobile ? 2 : 1; // Faster on mobile, slower on desktop
 let frameIncrement = isMobile ? 1.5 : 1; // Faster frame increment on mobile
@@ -80,7 +87,14 @@ function drawRestartScreen() {
 
 restartButton.addEventListener('click', () => {
     // Restart the game
-    bird = { x: 50, y: 300, radius: 15, velocity: 0, gravity: 0.2, lift: -6 }; // Reduced gravity
+    bird = { 
+        x: 50, 
+        y: 300, 
+        radius: 15, 
+        velocity: 0, 
+        gravity: isMobile ? 0.4 : 0.2, // Double gravity on mobile
+        lift: -6 
+    }; 
     pipes = [];
     frame = 0;
     score = 0; // Reset score
@@ -139,7 +153,14 @@ document.addEventListener('keydown', (e) => {
         bird.velocity = bird.lift;
     } else if (e.key.toLowerCase() === 'r' && gameOver) {
         // Restart the game
-        bird = { x: 50, y: 300, radius: 15, velocity: 0, gravity: 0.2, lift: -6 }; // Reduced gravity
+        bird = { 
+            x: 50, 
+            y: 300, 
+            radius: 15, 
+            velocity: 0, 
+            gravity: isMobile ? 0.4 : 0.2, // Double gravity on mobile
+            lift: -6 
+        }; 
         pipes = [];
         frame = 0;
         gameOver = false;
