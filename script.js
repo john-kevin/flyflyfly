@@ -1,8 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 320; // Reverted width from 480 to 320
-canvas.height = 480; // Reverted height from 640 to 480
+canvas.width = 280; // Reduced width for mobile
+canvas.height = 400; // Reduced height for mobile
 
 const bird = {
     x: 50,

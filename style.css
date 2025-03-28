@@ -13,6 +13,8 @@ canvas {
     display: block;
     margin: 0 auto; /* Center the canvas horizontally */
     background-color: #70c5ce; /* Add a background color for better visibility */
+    max-width: 100%; /* Ensure canvas doesn't overflow on small screens */
+    height: auto; /* Maintain aspect ratio */
 }
 
 #welcomeScreen {

@@ -54,8 +54,8 @@ beforeEach(() => {
         <button id="startButton">Start</button>
     `;
     const canvas = document.getElementById('gameCanvas');
-    canvas.width = 320; // Reverted width
-    canvas.height = 480; // Reverted height
+    canvas.width = 280; // Match new mobile width
+    canvas.height = 400; // Match new mobile height
 });
 
 describe('Bird Movement', () => {
@@ -75,9 +75,9 @@ describe('Bird Movement', () => {
     });
 
     test('Bird should not fall below the canvas', () => {
-        bird.y = 480; // Simulate bird at the bottom
+        bird.y = 400; // Simulate bird at the bottom
         bird.update();
-        expect(bird.y + bird.height).toBeLessThanOrEqual(480);
+        expect(bird.y + bird.height).toBeLessThanOrEqual(400);
     });
 
     test('Bird should not go above the canvas', () => {
@@ -144,9 +144,9 @@ describe('Bird Physics', () => {
     });
 
     test('Bird should not fall below the canvas', () => {
-        bird.y = 480; // Simulate bird at the bottom
+        bird.y = 400; // Simulate bird at the bottom
         bird.update();
-        expect(bird.y + bird.height).toBeLessThanOrEqual(480);
+        expect(bird.y + bird.height).toBeLessThanOrEqual(400);
     });
 
     test('Bird should not go above the canvas', () => {
