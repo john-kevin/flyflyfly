@@ -59,6 +59,9 @@ let shakeTimeout; // Timeout for stopping the shake effect
 let pipeCount = 0; // Counter to track the number of pipes generated
 let pipesSinceLastPowerUp = 0; // Counter to track pipes traversed since the last power-up
 let availablePowerUps = [...powerUpTypes]; // Copy of powerUpTypes to track available power-ups
+let cannonballs = []; // Array to store cannonballs
+let cannonballSpeed = 3; // Speed of cannonballs
+let particles = []; // Array to store particles for the fire trail
 
 function resetGame() {
     bird = { 
@@ -432,6 +435,100 @@ function drawPowerUpName() {
     }
 }
 
+function spawnCannonball() {
+    cannonballs.push({
+        x: canvas.width, // Start at the right edge of the canvas
+        y: Math.random() * (canvas.height - 50) + 25, // Random vertical position
+        radius: 10, // Size of the cannonball
+    });
+}
+
+function updateCannonballs() {
+    cannonballs.forEach(cannonball => {
+        cannonball.x -= cannonballSpeed; // Move cannonballs to the left
+    });
+
+    // Remove cannonballs that go off-screen
+    cannonballs = cannonballs.filter(cannonball => cannonball.x + cannonball.radius > 0);
+}
+
+function spawnParticles(cannonball) {
+    for (let i = 0; i < 5; i++) { // Generate multiple particles per frame
+        particles.push({
+            x: cannonball.x,
+            y: cannonball.y,
+            size: Math.random() * 3 + 1, // Random size for particles
+            speedX: (Math.random() - 0.5) * 2, // Random horizontal speed
+            speedY: (Math.random() - 0.5) * 2, // Random vertical speed
+            life: Math.random() * 30 + 20, // Random lifespan
+            color: `rgba(255, ${Math.floor(Math.random() * 150 + 100)}, 0, 1)` // Random orange/yellow color
+        });
+    }
+}
+
+function updateParticles() {
+    particles.forEach(particle => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.life -= 1; // Decrease lifespan
+    });
+
+    // Remove particles that have expired
+    particles = particles.filter(particle => particle.life > 0);
+}
+
+function drawParticles() {
+    particles.forEach(particle => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = particle.color;
+        ctx.fill();
+    });
+}
+
+function drawCannonballs() {
+    cannonballs.forEach(cannonball => {
+        // Spawn particles for the fire trail
+        spawnParticles(cannonball);
+
+        // Draw the flame effect
+        const gradient = ctx.createRadialGradient(
+            cannonball.x, cannonball.y, 0,
+            cannonball.x, cannonball.y, cannonball.radius * 2
+        );
+        gradient.addColorStop(0, 'rgba(255, 69, 0, 1)'); // Bright orange
+        gradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.8)'); // Lighter orange
+        gradient.addColorStop(1, 'rgba(255, 215, 0, 0)'); // Transparent yellow
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(cannonball.x, cannonball.y, cannonball.radius * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw the cannonball
+        ctx.beginPath();
+        ctx.arc(cannonball.x, cannonball.y, cannonball.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#333333'; // Dark gray for the cannonball
+        ctx.shadowColor = '#ff4500'; // Glow effect for the cannonball
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset shadow
+    });
+}
+
+function checkCannonballCollision() {
+    if (!collisionToggle.checked) return; // Skip collision check if the toggle is disabled
+
+    cannonballs.forEach(cannonball => {
+        const dist = Math.sqrt((bird.x - cannonball.x) ** 2 + (bird.y - cannonball.y) ** 2);
+        if (dist < bird.radius + cannonball.radius) {
+            if (!invincible) {
+                applyShakeEffect(); // Apply shake effect on collision
+                gameOver = true; // End the game
+            }
+        }
+    });
+}
+
 function gameLoop() {
     if (gameOver) {
         // Reset power-up effects, timer, and display when the game is over
@@ -450,6 +547,15 @@ function gameLoop() {
     drawPipes();
     drawGround(); // Draw ground
     drawPowerUpName(); // Draw the active power-up name
+
+    if (score >= 10) {
+        if (frame % 120 === 0) spawnCannonball(); // Spawn a cannonball every 120 frames
+        updateCannonballs();
+        drawCannonballs();
+        updateParticles();
+        drawParticles(); // Draw the fire trail particles
+        checkCannonballCollision();
+    }
 
     updateBird();
     updatePipes();
