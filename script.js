@@ -73,6 +73,7 @@ const pipes = [];
 const pipeWidth = 40;
 const pipeGap = 120;
 let frameCount = 0;
+let score = 0;
 
 function createPipe() {
     const topHeight = 110; // Adjusted topHeight for testing
@@ -95,6 +96,11 @@ function drawPipes() {
 
 function updatePipes() {
     pipes.forEach(pipe => {
+        // If bird passes the pipe, increase score
+        if (pipe.x + pipeWidth < bird.x && !pipe.passed) {
+            pipe.passed = true;
+            score++;
+        }
         pipe.x -= 1.5;  // Reduced from 2 for slower pipe movement
     });
 
@@ -132,6 +138,7 @@ function restartGame() {
     bird.velocity = 0;
     pipes.length = 0;
     frameCount = 0;
+    score = 0; // Reset score
     gameOverScreen.style.display = 'none';
     canvas.style.display = 'block';
     gameLoop();
@@ -155,6 +162,7 @@ function gameLoop() {
 
     bird.update();
     bird.draw();
+    drawScore(); // Add score display
 
     if (frameCount % 90 === 0) {
         createPipe();
@@ -172,6 +180,12 @@ function gameLoop() {
     gameLoopId = requestAnimationFrame(gameLoop);
 }
 
+function drawScore() {
+    ctx.fillStyle = 'white';
+    ctx.font = '24px Arial';
+    ctx.fillText(`Score: ${score}`, 10, 30);
+}
+
 canvas.addEventListener('click', () => bird.flap());
 
 module.exports = {
@@ -179,5 +193,6 @@ module.exports = {
     pipes,
     checkCollision,
     restartGame,
-    frameCount
+    frameCount,
+    score
 };

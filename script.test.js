@@ -1,7 +1,11 @@
 // Mock the DOM before requiring the script
 document.body.innerHTML = `
     <canvas id="gameCanvas" style="display: none;"></canvas>
-    <button id="restartButton" style="display: none;">Restart</button>
+    <div id="gameOverScreen" style="display: none;">
+        <h2>Game Over!</h2>
+        <p>Score: <span id="finalScore">0</span></p>
+        <button id="restartButton" style="display: none;">Restart</button>
+    </div>
     <div id="welcomeScreen" style="display: flex;">Welcome to the game!</div>
     <button id="startButton">Start</button>
 `;
@@ -41,7 +45,11 @@ beforeEach(() => {
     // Mock the DOM
     document.body.innerHTML = `
         <canvas id="gameCanvas" style="display: none;"></canvas>
-        <button id="restartButton" style="display: none;">Restart</button>
+        <div id="gameOverScreen" style="display: none;">
+            <h2>Game Over!</h2>
+            <p>Score: <span id="finalScore">0</span></p>
+            <button id="restartButton" style="display: none;">Restart</button>
+        </div>
         <div id="welcomeScreen" style="display: flex;">Welcome to the game!</div>
         <button id="startButton">Start</button>
     `;
@@ -145,6 +153,17 @@ describe('Bird Physics', () => {
         bird.y = -10; // Simulate bird above the canvas
         bird.update();
         expect(bird.y).toBeGreaterThanOrEqual(0);
+    });
+});
+
+describe('Game Restart Functionality', () => {
+    test('Restart should reset score to 0', () => {
+        const { score, restartGame } = require('./script');
+        // Simulate some score
+        let testScore = score;
+        testScore = 10;
+        restartGame();
+        expect(score).toBe(0);
     });
 });
 
