@@ -43,7 +43,6 @@ let score = 0; // Initialize score
 let stars = [];
 let powerUps = []; // Array to store power-ups
 const powerUpTypes = [
-    { type: 'speedBoost', color: '#00ff00', effect: () => { pipeSpeed += 2; }, reset: () => { pipeSpeed -= 2; }, duration: 5000 },
     { type: 'gravityReduction', color: '#0000ff', effect: () => { bird.gravity /= 2; }, reset: () => { bird.gravity *= 2; }, duration: 5000 },
     { type: 'invincibility', color: '#ff00ff', effect: () => { invincible = true; }, reset: () => { invincible = false; }, duration: 5000 },
     { type: 'scoreMultiplier', color: '#ffff00', effect: () => { scoreMultiplier = 2; }, reset: () => { scoreMultiplier = 1; }, duration: 5000 },
@@ -261,7 +260,7 @@ function updatePipes() {
 
         // Ensure the first power-up appears on the 5th pipe
         if (pipeCount === 5) {
-            spawnPowerUp(top, adjustedGap);
+            spawnSpecificPowerUp(top, adjustedGap, 'gravityReduction'); // Replace 'speedBoost' with another power-up if needed
         } 
         // Ensure a power-up appears if 10 pipes are traversed without one
         else if (pipesSinceLastPowerUp >= 10) {
@@ -326,6 +325,23 @@ function spawnPowerUp(top, gap) {
     pipesSinceLastPowerUp = 0; // Reset the counter after spawning a power-up
 }
 
+function spawnSpecificPowerUp(top, gap, powerUpType) {
+    const specificPowerUp = powerUpTypes.find(p => p.type === powerUpType);
+    if (specificPowerUp) {
+        powerUps.push({
+            x: canvas.width + 25, // Center of the pipe
+            y: top + gap / 2, // Center of the gap
+            radius: 10, // Power-up size
+            color: specificPowerUp.color,
+            type: specificPowerUp.type,
+            effect: specificPowerUp.effect,
+            reset: specificPowerUp.reset,
+            duration: specificPowerUp.duration,
+        });
+        pipesSinceLastPowerUp = 0; // Reset the counter after spawning a power-up
+    }
+}
+
 function checkPowerUpCollision() {
     powerUps.forEach((powerUp, index) => {
         const dist = Math.sqrt((bird.x - powerUp.x) ** 2 + (bird.y - powerUp.y) ** 2);
@@ -360,7 +376,7 @@ function checkPowerUpCollision() {
 function applyVisualEffect(powerUpType) {
     switch (powerUpType) {
         case 'speedBoost':
-            canvas.style.animation = 'speedBoostEffect 0.5s infinite alternate';
+            // No visual effect, the speed boost is handled in the effect function
             break;
         case 'gravityReduction':
             canvas.style.filter = 'blur(5px)';
@@ -379,7 +395,7 @@ function applyVisualEffect(powerUpType) {
 function resetVisualEffect(powerUpType) {
     switch (powerUpType) {
         case 'speedBoost':
-            canvas.style.animation = '';
+            // No visual effect to reset
             break;
         case 'gravityReduction':
             canvas.style.filter = 'none';
