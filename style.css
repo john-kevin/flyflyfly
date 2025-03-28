@@ -127,7 +127,7 @@ button:hover {
 #bouncingBird {
     position: absolute; /* Position the bird relative to the welcome screen */
     top: calc(50% - 120px); /* Adjust to place the bird above the title */
-    left: 50%;
+    left: calc(50% - 20px); /* Move the bird 20px to the left */
     transform: translateX(-50%);
     width: 50px;
     height: 50px;
@@ -139,7 +139,7 @@ button:hover {
 
 #dialogBox {
     position: absolute;
-    top: -60px;
+    top: -80px; /* Adjusted to avoid overlapping the bird */
     left: 50%;
     transform: translateX(-50%);
     background: #1a1a1a;
@@ -150,7 +150,20 @@ button:hover {
     box-shadow: 0 0 10px #00ffcc;
     text-align: center;
     width: 200px;
-    animation: fadeInOut 4s infinite;
+    animation: fadeInOut 8s infinite;
+}
+
+#dialogBox::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* Position the arrow below the dialog box */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #1a1a1a; /* Match the dialog box background */
 }
 
 @keyframes bounce {
