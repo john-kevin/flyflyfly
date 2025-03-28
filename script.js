@@ -56,6 +56,7 @@ let activePowerUpName = ''; // Store the name of the active power-up
 let powerUpDisplayTimeout; // Timeout for clearing the power-up name display
 let powerUpRemainingTime = 0; // Store the remaining time for the active power-up
 let powerUpTimerInterval; // Interval for updating the timer
+let shakeTimeout; // Timeout for stopping the shake effect
 
 function resetGame() {
     bird = { 
@@ -209,6 +210,25 @@ window.addEventListener('click', (event) => {
     }
 });
 
+function applyShakeEffect() {
+    const intensity = 5; // Shake intensity
+    const duration = 100; // Shake duration in milliseconds
+
+    let startTime = Date.now();
+    function shake() {
+        const elapsed = Date.now() - startTime;
+        if (elapsed < duration) {
+            const offsetX = (Math.random() * 2 - 1) * intensity;
+            const offsetY = (Math.random() * 2 - 1) * intensity;
+            canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            requestAnimationFrame(shake);
+        } else {
+            canvas.style.transform = ''; // Reset canvas position
+        }
+    }
+    shake();
+}
+
 function updatePipes() {
     if (frame % (isMobile ? 150 : 200) === 0) { // Faster pipe generation on mobile
         let gap = 150; // Increase the gap for better gameplay
@@ -245,7 +265,8 @@ function updatePipes() {
             bird.x - bird.radius < pipe.x + pipe.width &&
             (bird.y - bird.radius < pipe.top || bird.y + bird.radius > canvas.height - pipe.bottom)
         ) {
-            if (!invincible) { // If the bird does not have invincibility, game over
+            if (!invincible) { // If the bird does not have invincibility, apply shake and game over
+                applyShakeEffect(); // Apply the shake effect
                 gameOver = true;
             }
         }
