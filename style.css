@@ -261,6 +261,15 @@ button:hover {
     }
 }
 
+@keyframes speedBoostEffect {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(5px);
+    }
+}
+
 label {
     display: flex;
     align-items: center;

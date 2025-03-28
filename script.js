@@ -315,31 +315,70 @@ function spawnPowerUp(top, gap) {
 function checkPowerUpCollision() {
     powerUps.forEach((powerUp, index) => {
         const dist = Math.sqrt((bird.x - powerUp.x) ** 2 + (bird.y - powerUp.y) ** 2);
-        if (dist < bird.radius + powerUp.radius) { // Correctly compare bird's radius and power-up's radius
-            powerUps.splice(index, 1); // Remove the power-up
-            activePowerUpName = powerUp.type; // Set the active power-up name
-            powerUpRemainingTime = powerUp.duration / 1000; // Set the remaining time in seconds
+        if (dist < bird.radius + powerUp.radius) {
+            powerUps.splice(index, 1);
+            activePowerUpName = powerUp.type;
+            powerUpRemainingTime = powerUp.duration / 1000;
 
-            clearTimeout(powerUpDisplayTimeout); // Clear any existing timeout
-            clearInterval(powerUpTimerInterval); // Clear any existing timer interval
+            clearTimeout(powerUpDisplayTimeout);
+            clearInterval(powerUpTimerInterval);
 
-            // Start a continuous timer to update the remaining time
             const startTime = Date.now();
             powerUpTimerInterval = setInterval(() => {
-                const elapsed = (Date.now() - startTime) / 1000; // Calculate elapsed time in seconds
-                powerUpRemainingTime = Math.max((powerUp.duration / 1000) - elapsed, 0); // Update remaining time
+                const elapsed = (Date.now() - startTime) / 1000;
+                powerUpRemainingTime = Math.max((powerUp.duration / 1000) - elapsed, 0);
                 if (powerUpRemainingTime <= 0) {
-                    clearInterval(powerUpTimerInterval); // Stop the timer when time runs out
-                    activePowerUpName = ''; // Clear the power-up name
+                    clearInterval(powerUpTimerInterval);
+                    activePowerUpName = '';
+                    resetVisualEffect(powerUp.type); // Reset visual effect when time runs out
                 }
-            }, 16); // Update approximately every frame (60 FPS)
+            }, 16);
 
-            powerUp.effect(); // Activate the power-up effect
+            applyVisualEffect(powerUp.type); // Apply visual effect based on power-up type
+            powerUp.effect();
             setTimeout(() => {
-                powerUp.reset(); // Reset the effect after the duration
+                powerUp.reset();
             }, powerUp.duration);
         }
     });
+}
+
+function applyVisualEffect(powerUpType) {
+    switch (powerUpType) {
+        case 'speedBoost':
+            canvas.style.animation = 'speedBoostEffect 0.5s infinite alternate';
+            break;
+        case 'gravityReduction':
+            canvas.style.filter = 'blur(5px)';
+            break;
+        case 'invincibility':
+            bird.shadowColor = '#ff00ff';
+            bird.shadowBlur = 20;
+            break;
+        case 'scoreMultiplier':
+            scoreElement.style.color = '#ffff00';
+            scoreElement.style.fontSize = '28px';
+            break;
+    }
+}
+
+function resetVisualEffect(powerUpType) {
+    switch (powerUpType) {
+        case 'speedBoost':
+            canvas.style.animation = '';
+            break;
+        case 'gravityReduction':
+            canvas.style.filter = 'none';
+            break;
+        case 'invincibility':
+            bird.shadowColor = '#ffff00';
+            bird.shadowBlur = 15;
+            break;
+        case 'scoreMultiplier':
+            scoreElement.style.color = '#00ffcc';
+            scoreElement.style.fontSize = '24px';
+            break;
+    }
 }
 
 function drawPowerUpName() {
